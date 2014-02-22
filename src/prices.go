@@ -7,6 +7,8 @@ import (
 	"os"
 	"bufio"
 	"strings"
+	"fmt"
+	"io"
 )
 
 type Menu struct {
@@ -24,6 +26,32 @@ type Product struct {
 	Name        string
 	Price       string
 	Manufactura string
+	Menu        string
+}
+type Tovar struct {
+	Site        string
+	Link        string
+	NameProduct string
+	Action_acia string
+	Action_new  string
+	Price       string
+	Art         string
+	Sex         string
+	Age         string
+	Descrip     string
+	Pic         []string
+}
+type TovarBitrix struct {
+	Art         string
+	NameProduct string
+	Action_acia string
+	Action_new  string
+	Price       string
+	Sex         string
+	Age         string
+	Descrip     string
+	Pic         []string
+	Provider    string
 	Menu        string
 }
 
@@ -61,13 +89,17 @@ func savePrice() {
 	for {
 		var prod Product
 		line, _, err := reader.ReadLine()
-		error_log(err)
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			error_log(err)
+		}
 		str := strings.Split(string(line), ";")
-		prod.Articul = str[0]
-		prod.Name = str[1]
-		prod.Price = str[2]
-		prod.Manufactura = str[3]
-		prod.Menu = str[4]
+		prod.Articul = prepareStrings(str[0])
+		prod.Name = prepareStrings(str[1])
+		prod.Price = prepareStrings(str[2])
+		prod.Manufactura = prepareStrings(str[3])
+		prod.Menu = prepareStrings(str[4])
 		saveOrUpdateProduct(prod)
 	}
 }
@@ -79,4 +111,6 @@ func main() {
 	if (upPrice) {
 		savePrice()
 	}
+	updatePrice()
+	fmt.Println("the end")
 }
